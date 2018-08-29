@@ -47,4 +47,8 @@ public class LinkedInLoginPage {
                 && getCurrentTitle().equals("LinkedIn: Log In or Sign Up")
                 && signInButton.isDisplayed();
     }
+
+    public boolean isSignInButtonActive(){
+        return  signInButton.isEnabled();
+    }
 }
