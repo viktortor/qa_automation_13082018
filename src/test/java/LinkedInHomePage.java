@@ -26,7 +26,7 @@ public class LinkedInHomePage {
 
     public boolean isPageLoaded(){
         return getCurrentUrl().equals("https://www.linkedin.com/feed/")
-                && getCurrentTitle().equals("LinkedIn")
+                && getCurrentTitle().contains("LinkedIn")
                 && profileNavItem.isDisplayed();
     }
 }

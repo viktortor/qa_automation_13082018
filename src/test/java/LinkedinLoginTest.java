@@ -3,6 +3,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class LinkedinLoginTest {
@@ -19,18 +20,38 @@ public class LinkedinLoginTest {
         driver.quit();
     }
 
-    @Test //(enabled = false)
-    public void successfullLoginTest () {
+
+    @DataProvider
+    public Object[][] validDataProvider() {
+        return new Object[][]{
+                { "getjman1@meta.ua", "Qwertyu-1" },
+                { "getJMan1@meta.ua", "Qwertyu-1" }
+        };
+    }
+
+
+    @Test(dataProvider = "validDataProvider") //(enabled = false)
+    public void successfullLoginTest (String userEmail, String userPassword) {
 
         LinkedInLoginPage linkedInLoginPage = new LinkedInLoginPage(driver); //объявили переменную linkedInLoginPage класса LinkedInLoginPage
         Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");
-        linkedInLoginPage.login("getjman1@meta.ua", "Qwertyu-1");
+        LinkedInHomePage linkedInHomePage = linkedInLoginPage.login(userEmail, userPassword);
 
-        LinkedInHomePage linkedInHomePage = new LinkedInHomePage(driver);
+       // LinkedInHomePage linkedInHomePage = new LinkedInHomePage(driver); //спрятал внутри метода login
         Assert.assertTrue(linkedInHomePage.isPageLoaded(),"Home page is not loaded");
     }
 
 
+    @Test ///(priority = 1)
+    public void emptyUserEmailAndUserPasswordTest() {
+
+        LinkedInLoginPage linkedInLoginPage = new LinkedInLoginPage(driver); //объявили переменную linkedInLoginPage класса LinkedInLoginPage
+        Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");
+        linkedInLoginPage = linkedInLoginPage.login("", "");
+
+
+        Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");
+    }
     @Test //(priority = 1)
     public void negativLoginTest() throws InterruptedException {
         LinkedInLoginPage linkedInLoginPage = new LinkedInLoginPage(driver); //объявили переменную linkedInLoginPage класса LinkedInLoginPage
