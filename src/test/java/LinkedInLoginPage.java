@@ -41,7 +41,7 @@ public class LinkedInLoginPage {
             return (T) new LinkedInLoginSubmitPage(driver);
         }
         else {
-            return (T) this; //или можно написать  new LinkedInLoginPage(driver) или PageFactory.initElements(driver,LinkedInLoginPage.class)
+            return (T) this;
         }
     }
 

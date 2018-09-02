@@ -7,12 +7,12 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class LinkedinLoginTest {
-    WebDriver driver; //виден всему классу
-    //Аннотация (@) - сообщаем компилятору доп инфо - заставляем запускать наш метод
+    WebDriver driver;
+
     @BeforeMethod
     public void beforeMethod() {
         driver = new ChromeDriver();
-        driver.get("https://www.linkedin.com/"); //полный формат адреса (с https....)
+        driver.get("https://www.linkedin.com/");
     }
 
     @AfterMethod
@@ -30,188 +30,75 @@ public class LinkedinLoginTest {
     }
 
 
-    @Test(dataProvider = "validDataProvider") //(enabled = false)
+    @DataProvider
+    public Object[][] emptyDataProvider() {
+        return new Object[][]{
+                { "getjman1@meta.ua", "" },
+                { "", "Qwertyu-1" },
+                { "", "" },
+                { "            ", "Qwertyu-1" },
+                { "getjman1@meta.ua", "            " },
+                { "             ", "            " },
+                { "              ", "" },
+                { "", "            " }
+        };
+    }
+
+
+
+    @DataProvider
+    public static Object[][] invalidDataProvider() {
+        return new Object[][]{
+                { "abcdefg@bcd.fds", "Wrong123", "Hmm, we don't recognize that email. Please try again.", "" },
+                { "getjman1@metaua", "Wrong123", "Please enter a valid email address.", "" },
+                { "getjman1meta.ua", "Wrong123", "Please enter a valid email address.", "" },
+                { "getj man1@meta.ua", "Wrong123", "Please enter a valid email address.", "" },
+                { "getjman1@me ta.ua", "Wrong123", "Please enter a valid email address.", "" },
+                { "@meta.ua", "Wrong123", "Please enter a valid email address.", "" },
+                { "getjman1@", "Wrong123", "Please enter a valid email address.", "" },
+                { "getjman1@meta.ua", "short", "", "The password you provided must have at least 6 characters." },
+                { "getjman1@meta.ua", "Wrong123", "", "Hmm, that's not the right password. Please try again or request a new one." },
+                { "qwertyuiopqwertyuiiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyyuiopqwertyuiop@bcd.fds", "Wrong123", "The text you provided is too long (the maximum length is 128 characters, your text contains 140 characters).", "" },
+                { "getjman1@meta.ua", "qwertyuiopqwertyuiiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyyuiopqwertyuiopqwertyuiopqwertyuiiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyyuiopqwertyuiopqwertyuiopqwertyuiiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyyuiopqwertyuiopqwertyuiopqwertyuiiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyyuiopqwertyuiop", "", "The password you provided must have at most 400 characters." },
+                { "a@b.c", "Wrong", "Please enter a valid email address.", "The password you provided must have at least 6 characters." }
+        };
+    }
+
+
+    @Test(dataProvider = "validDataProvider")
     public void successfullLoginTest (String userEmail, String userPassword) {
 
-        LinkedInLoginPage linkedInLoginPage = new LinkedInLoginPage(driver); //объявили переменную linkedInLoginPage класса LinkedInLoginPage
+        LinkedInLoginPage linkedInLoginPage = new LinkedInLoginPage(driver);
         Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");
         LinkedInHomePage linkedInHomePage = linkedInLoginPage.login(userEmail, userPassword);
 
-       // LinkedInHomePage linkedInHomePage = new LinkedInHomePage(driver); //спрятал внутри метода login
         Assert.assertTrue(linkedInHomePage.isPageLoaded(),"Home page is not loaded");
-    }
-
-
-    @Test ///(priority = 1)
-    public void emptyUserEmailAndUserPasswordTest() {
-
-        LinkedInLoginPage linkedInLoginPage = new LinkedInLoginPage(driver); //объявили переменную linkedInLoginPage класса LinkedInLoginPage
-        Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");
-        linkedInLoginPage = linkedInLoginPage.login("", "");
-
-
-        Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");
-    }
-    @Test //(priority = 1)
-    public void negativLoginTest() throws InterruptedException {
-        LinkedInLoginPage linkedInLoginPage = new LinkedInLoginPage(driver); //объявили переменную linkedInLoginPage класса LinkedInLoginPage
-        Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");
-        linkedInLoginPage.login("a@b.c", "Wrong");
-
-       LinkedInLoginSubmitPage linkedInLoginSubmitPage = new LinkedInLoginSubmitPage(driver);
-        Assert.assertTrue(linkedInLoginSubmitPage.isPageLoaded(),"Login-Submit page is not loaded");
 
     }
 
-    @Test ///(priority = 1) //
-    public void wrongEmailFormatWithoutDotLoginTest() throws InterruptedException {
-        LinkedInLoginPage linkedInLoginPage = new LinkedInLoginPage(driver); //объявили переменную linkedInLoginPage класса LinkedInLoginPage
+
+    @Test (dataProvider = "emptyDataProvider")
+    public void emptyUserEmailAndUserPasswordTest(String userEmail, String userPassword) {
+
+        LinkedInLoginPage linkedInLoginPage = new LinkedInLoginPage(driver);
         Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");
-        linkedInLoginPage.login("getjman1@metaua", "Wrong");
+        linkedInLoginPage = linkedInLoginPage.login(userEmail, userPassword);
+
+        Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");
+    }
+
+
+    @Test (dataProvider = "invalidDataProvider")
+    public void negativLoginTest(String userEmail, String userPassword, String userEmailFieldError, String userPasswordFieldError){
+        LinkedInLoginPage linkedInLoginPage = new LinkedInLoginPage(driver);
+        Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");
+        linkedInLoginPage.login(userEmail, userPassword);
 
         LinkedInLoginSubmitPage linkedInLoginSubmitPage = new LinkedInLoginSubmitPage(driver);
+
         Assert.assertTrue(linkedInLoginSubmitPage.isPageLoaded(),"Login-Submit page is not loaded");
-        Assert.assertTrue(linkedInLoginSubmitPage.isWrongEmailFormatAlertMessageRight(),"Wrong Email Format Alert Message is incorrect");
+        Assert.assertTrue(linkedInLoginSubmitPage.isAlertMessageRight(userEmailFieldError, userPasswordFieldError),"Wrong Email Format Alert Message is incorrect");
 
-    }
-
-
-    @Test ///(priority = 1) //
-    public void wrongEmailFormatWithoutAtLoginTest() throws InterruptedException {
-        LinkedInLoginPage linkedInLoginPage = new LinkedInLoginPage(driver); //объявили переменную linkedInLoginPage класса LinkedInLoginPage
-        Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");
-        linkedInLoginPage.login("getjman1meta.ua", "Wrong");
-
-        LinkedInLoginSubmitPage linkedInLoginSubmitPage = new LinkedInLoginSubmitPage(driver);
-        Assert.assertTrue(linkedInLoginSubmitPage.isPageLoaded(),"Login-Submit page is not loaded");
-        Assert.assertTrue(linkedInLoginSubmitPage.isWrongEmailFormatAlertMessageRight(),"Wrong Email Format Alert Message is incorrect");
-
-    }
-
-
-    @Test ///(priority = 1) //
-    public void wrongEmailFormatAccountWithSpaceLoginTest() throws InterruptedException {
-        LinkedInLoginPage linkedInLoginPage = new LinkedInLoginPage(driver); //объявили переменную linkedInLoginPage класса LinkedInLoginPage
-        Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");
-        linkedInLoginPage.login("getj man1@meta.ua", "Wrong");
-
-        LinkedInLoginSubmitPage linkedInLoginSubmitPage = new LinkedInLoginSubmitPage(driver);
-        Assert.assertTrue(linkedInLoginSubmitPage.isPageLoaded(),"Login-Submit page is not loaded");
-        Assert.assertTrue(linkedInLoginSubmitPage.isWrongEmailFormatAlertMessageRight(),"Wrong Email Format Alert Message is incorrect");
-
-    }
-
-    @Test ///(priority = 1) //
-    public void wrongEmailFormatDomainWithSpaceLoginTest() throws InterruptedException {
-        LinkedInLoginPage linkedInLoginPage = new LinkedInLoginPage(driver); //объявили переменную linkedInLoginPage класса LinkedInLoginPage
-        Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");
-        linkedInLoginPage.login("getjman1@me ta.ua", "Wrong");
-
-        LinkedInLoginSubmitPage linkedInLoginSubmitPage = new LinkedInLoginSubmitPage(driver);
-        Assert.assertTrue(linkedInLoginSubmitPage.isPageLoaded(),"Login-Submit page is not loaded");
-        Assert.assertTrue(linkedInLoginSubmitPage.isWrongEmailFormatAlertMessageRight(),"Wrong Email Format Alert Message is incorrect");
-
-    }
-
-    @Test ///(priority = 1) //
-    public void wrongEmailFormatWithoutAccountLoginTest() throws InterruptedException {
-        LinkedInLoginPage linkedInLoginPage = new LinkedInLoginPage(driver); //объявили переменную linkedInLoginPage класса LinkedInLoginPage
-        Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");
-        linkedInLoginPage.login("@meta.ua", "Wrong");
-
-        LinkedInLoginSubmitPage linkedInLoginSubmitPage = new LinkedInLoginSubmitPage(driver);
-        Assert.assertTrue(linkedInLoginSubmitPage.isPageLoaded(),"Login-Submit page is not loaded");
-        Assert.assertTrue(linkedInLoginSubmitPage.isWrongEmailFormatAlertMessageRight(),"Wrong Email Format Alert Message is incorrect");
-
-    }
-
-    @Test ///(priority = 1) //
-    public void wrongEmailFormatWithoutDomainLoginTest() throws InterruptedException {
-        LinkedInLoginPage linkedInLoginPage = new LinkedInLoginPage(driver); //объявили переменную linkedInLoginPage класса LinkedInLoginPage
-        Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");
-        linkedInLoginPage.login("getjman1@", "Wrong");
-
-        LinkedInLoginSubmitPage linkedInLoginSubmitPage = new LinkedInLoginSubmitPage(driver);
-        Assert.assertTrue(linkedInLoginSubmitPage.isPageLoaded(),"Login-Submit page is not loaded");
-        Assert.assertTrue(linkedInLoginSubmitPage.isWrongEmailFormatAlertMessageRight(),"Wrong Email Format Alert Message is incorrect");
-
-    }
-
-    @Test ///(priority = 1)
-    public void unknownEmailLoginTest() throws InterruptedException {
-        LinkedInLoginPage linkedInLoginPage = new LinkedInLoginPage(driver); //объявили переменную linkedInLoginPage класса LinkedInLoginPage
-        Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");
-        linkedInLoginPage.login("abcdefg@bcd.fds", "Wrong123");
-
-        LinkedInLoginSubmitPage linkedInLoginSubmitPage = new LinkedInLoginSubmitPage(driver);
-        Assert.assertTrue(linkedInLoginSubmitPage.isPageLoaded(),"Login-Submit page is not loaded");
-        Assert.assertTrue(linkedInLoginSubmitPage.isUnknownEmailAlertMessageRight(),"Unknown Email Alert Message is incorrect");
-    }
-
-    @Test ///(priority = 1)
-    public void shortPasswordLoginTest() throws InterruptedException {
-        LinkedInLoginPage linkedInLoginPage = new LinkedInLoginPage(driver); //объявили переменную linkedInLoginPage класса LinkedInLoginPage
-        Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");
-        linkedInLoginPage.login("getjman1@meta.ua", "short");
-
-        LinkedInLoginSubmitPage linkedInLoginSubmitPage = new LinkedInLoginSubmitPage(driver);
-        Assert.assertTrue(linkedInLoginSubmitPage.isPageLoaded(),"Login-Submit page is not loaded");
-        Assert.assertTrue(linkedInLoginSubmitPage.isShortPasswordAlertMessageRight(),"Short Password Alert Message is incorrect");
-    }
-
-    @Test ///(priority = 1)
-    public void incorrectPasswordLoginTest() throws InterruptedException {
-        LinkedInLoginPage linkedInLoginPage = new LinkedInLoginPage(driver); //объявили переменную linkedInLoginPage класса LinkedInLoginPage
-        Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");
-        linkedInLoginPage.login("getjman1@meta.ua", "moreThan6signs");
-
-        LinkedInLoginSubmitPage linkedInLoginSubmitPage = new LinkedInLoginSubmitPage(driver);
-        Assert.assertTrue(linkedInLoginSubmitPage.isPageLoaded(),"Login-Submit page is not loaded");
-        Assert.assertTrue(linkedInLoginSubmitPage.isIncorrectPasswordAlertMessageRight(),"Incorrect Password Alert Message is incorrect");
-
-    }
-
-    @Test ///(priority = 1)
-    public void longEmailLoginTest() throws InterruptedException {
-        LinkedInLoginPage linkedInLoginPage = new LinkedInLoginPage(driver); //объявили переменную linkedInLoginPage класса LinkedInLoginPage
-        Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");
-        linkedInLoginPage.login("qwertyuiopqwertyuiiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyyuiopqwertyuiop@bcd.fds", "moreThan6signs");
-
-        LinkedInLoginSubmitPage linkedInLoginSubmitPage = new LinkedInLoginSubmitPage(driver);
-        Assert.assertTrue(linkedInLoginSubmitPage.isPageLoaded(),"Login-Submit page is not loaded");
-        Assert.assertTrue(linkedInLoginSubmitPage.isLongEmailAlertMessageRight(),"Long Email Alert Message is incorrect");
-    }
-
-    @Test ///(priority = 1)
-    public void longPasswordLoginTest() throws InterruptedException {
-        LinkedInLoginPage linkedInLoginPage = new LinkedInLoginPage(driver); //объявили переменную linkedInLoginPage класса LinkedInLoginPage
-        Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");
-        linkedInLoginPage.login("getjman1@meta.ua", "qwertyuiopqwertyuiiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyyuiopqwertyuiopqwertyuiopqwertyuiiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyyuiopqwertyuiopqwertyuiopqwertyuiiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyyuiopqwertyuiopqwertyuiopqwertyuiiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyyuiopqwertyuiop");
-
-        LinkedInLoginSubmitPage linkedInLoginSubmitPage = new LinkedInLoginSubmitPage(driver);
-        Assert.assertTrue(linkedInLoginSubmitPage.isPageLoaded(),"Login-Submit page is not loaded");
-        Assert.assertTrue(linkedInLoginSubmitPage.isLongPasswordAlertMessageRight(),"Long Password Alert Message is incorrect");
-    }
-
-    @Test ///(priority = 1)
-    public void emptyPasswordLoginTest() throws InterruptedException {
-        LinkedInLoginPage linkedInLoginPage = new LinkedInLoginPage(driver); //объявили переменную linkedInLoginPage класса LinkedInLoginPage
-        Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");
-        linkedInLoginPage.login("name@domain.com", "");
-
-
-        Assert.assertFalse(linkedInLoginPage.isSignInButtonActive(), "SignIn button is Active");
-        Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"It is not Login page");
-    }
-
-    @Test ///(priority = 1)
-    public void emptyEmailLoginTest() throws InterruptedException {
-        LinkedInLoginPage linkedInLoginPage = new LinkedInLoginPage(driver); //объявили переменную linkedInLoginPage класса LinkedInLoginPage
-        Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");
-        linkedInLoginPage.login("", "Password");
-
-        Assert.assertFalse(linkedInLoginPage.isSignInButtonActive(), "SignIn button is Active");
-        Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"It is not Login page");
     }
 
 }
