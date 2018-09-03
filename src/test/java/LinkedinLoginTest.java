@@ -8,11 +8,13 @@ import org.testng.annotations.Test;
 
 public class LinkedinLoginTest {
     WebDriver driver;
+    LinkedInLoginPage linkedInLoginPage;
 
     @BeforeMethod
     public void beforeMethod() {
         driver = new ChromeDriver();
         driver.get("https://www.linkedin.com/");
+        linkedInLoginPage = new LinkedInLoginPage(driver);
     }
 
     @AfterMethod
@@ -45,9 +47,8 @@ public class LinkedinLoginTest {
     }
 
 
-
     @DataProvider
-    public static Object[][] invalidDataProvider() {
+    public Object[][] invalidDataProvider() {
         return new Object[][]{
                 { "abcdefg@bcd.fds", "Wrong123", "Hmm, we don't recognize that email. Please try again.", "" },
                 { "getjman1@metaua", "Wrong123", "Please enter a valid email address.", "" },
@@ -68,7 +69,7 @@ public class LinkedinLoginTest {
     @Test(dataProvider = "validDataProvider")
     public void successfullLoginTest (String userEmail, String userPassword) {
 
-        LinkedInLoginPage linkedInLoginPage = new LinkedInLoginPage(driver);
+
         Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");
         LinkedInHomePage linkedInHomePage = linkedInLoginPage.login(userEmail, userPassword);
 
@@ -80,7 +81,6 @@ public class LinkedinLoginTest {
     @Test (dataProvider = "emptyDataProvider")
     public void emptyUserEmailAndUserPasswordTest(String userEmail, String userPassword) {
 
-        LinkedInLoginPage linkedInLoginPage = new LinkedInLoginPage(driver);
         Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");
         linkedInLoginPage = linkedInLoginPage.login(userEmail, userPassword);
 
@@ -90,14 +90,15 @@ public class LinkedinLoginTest {
 
     @Test (dataProvider = "invalidDataProvider")
     public void negativLoginTest(String userEmail, String userPassword, String userEmailFieldError, String userPasswordFieldError){
-        LinkedInLoginPage linkedInLoginPage = new LinkedInLoginPage(driver);
         Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");
-        linkedInLoginPage.login(userEmail, userPassword);
-
-        LinkedInLoginSubmitPage linkedInLoginSubmitPage = new LinkedInLoginSubmitPage(driver);
+        LinkedInLoginSubmitPage linkedInLoginSubmitPage = linkedInLoginPage.login(userEmail, userPassword);
 
         Assert.assertTrue(linkedInLoginSubmitPage.isPageLoaded(),"Login-Submit page is not loaded");
-        Assert.assertTrue(linkedInLoginSubmitPage.isAlertMessageRight(userEmailFieldError, userPasswordFieldError),"Wrong Email Format Alert Message is incorrect");
+
+
+        Assert.assertEquals(linkedInLoginSubmitPage.getMainAlertMessage(), "There were one or more errors in your submission. Please correct the marked fields below.", "Main text is wrong");
+        Assert.assertEquals(linkedInLoginSubmitPage.getWrongEmailAlertMessage(), userEmailFieldError, "EmailAlertMessage is wrong");
+        Assert.assertEquals(linkedInLoginSubmitPage.getWrongPasswordAlertMessage(), userPasswordFieldError,"PasswordAlertMessage is wrong");
 
     }
 

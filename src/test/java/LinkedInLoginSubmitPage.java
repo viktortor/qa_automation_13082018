@@ -3,8 +3,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-public class LinkedInLoginSubmitPage {
-    private WebDriver driver;
+public class LinkedInLoginSubmitPage extends LinkedInBasePage {
 
     @FindBy(xpath = "//div[@role='alert']")
     WebElement mainAlertMessage;
@@ -21,13 +20,6 @@ public class LinkedInLoginSubmitPage {
         PageFactory.initElements(driver, this);
     }
 
-
-    public String getCurrentUrl(){
-        return driver.getCurrentUrl();
-    }
-    public String getCurrentTitle(){
-        return driver.getTitle();
-    }
     public String getMainAlertMessage(){
         return mainAlertMessage.getText();
     }
@@ -39,15 +31,9 @@ public class LinkedInLoginSubmitPage {
     }
 
     public boolean isPageLoaded() {
-        return getCurrentUrl().equals("https://www.linkedin.com/uas/login-submit")
-                && getCurrentTitle().equals("Sign In to LinkedIn")
-                && getMainAlertMessage().equals("There were one or more errors in your submission. Please correct the marked fields below.");
-    }
-
-
-    public boolean isAlertMessageRight(String userEmailFieldError, String userPasswordFieldError){
-        return getWrongEmailAlertMessage().equals(userEmailFieldError)
-                && getWrongPasswordAlertMessage().equals(userPasswordFieldError);
+        return getCurrentUrl().contains("uas/login-submit")
+                && getCurrentTitle().contains("Sign In to LinkedIn")
+                && mainAlertMessage.isDisplayed();
     }
 
 }

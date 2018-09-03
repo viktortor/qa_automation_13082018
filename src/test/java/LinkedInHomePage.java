@@ -3,8 +3,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-public class LinkedInHomePage {
-    private WebDriver driver;
+public class LinkedInHomePage extends LinkedInBasePage {
 
     @FindBy(xpath = "//li[@id='profile-nav-item']")
     private WebElement profileNavItem;
@@ -15,14 +14,6 @@ public class LinkedInHomePage {
         PageFactory.initElements(driver, this);
     }
 
-
-    public String getCurrentUrl(){
-        return driver.getCurrentUrl();
-    }
-
-    public String getCurrentTitle(){
-        return driver.getTitle();
-    }
 
     public boolean isPageLoaded(){
         return getCurrentUrl().equals("https://www.linkedin.com/feed/")
