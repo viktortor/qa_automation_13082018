@@ -20,7 +20,7 @@ public class LinkedInSearchTest {
 
     @AfterMethod
     public void afterMethod(){
-   //     driver.quit();
+        driver.quit();
     }
 
     @Test
