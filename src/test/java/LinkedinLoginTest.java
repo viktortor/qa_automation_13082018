@@ -16,7 +16,7 @@ public class LinkedinLoginTest {
         driver.get("https://www.linkedin.com/");
         linkedInLoginPage = new LinkedInLoginPage(driver);
     }
- 
+
     @AfterMethod
     public void afterMethod(){
         driver.quit();
