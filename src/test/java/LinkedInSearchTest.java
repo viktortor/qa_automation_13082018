@@ -5,7 +5,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static java.lang.Thread.sleep;
+import java.util.List;
 
 public class LinkedInSearchTest {
     WebDriver driver;
@@ -23,25 +23,35 @@ public class LinkedInSearchTest {
         driver.quit();
     }
 
+/*    - Open login page
+- Verify login page is loaded
+- Login with valid credentials
+- Verify home page is loaded
+- Search for 'hr' Searchterm
+- Verify Search page is loaded
+- Verify 10 results displayed on search page
+- Verify each result item contains searchterm*/
+
     @Test
     public void successfullSearchTest () {
 
+        String userEmail = "getjman1@meta.ua";
+        String userPassword = "Qwertyu-1";
+        String searchTerm = "HR";
+
         Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");
-        LinkedInHomePage linkedInHomePage = linkedInLoginPage.login("getjman1@meta.ua", "Qwertyu-1");
+        LinkedInHomePage linkedInHomePage = linkedInLoginPage.login(userEmail, userPassword);
         Assert.assertTrue(linkedInHomePage.isPageLoaded(),"Home page is not loaded");
 
-        LinkedInSearchPage linkedInSearchPage = linkedInHomePage.insertTextToSearchField("hr");
-        try {
-            sleep (3000);
-        } catch (InterruptedException e){
-            e.printStackTrace();
-        }
+        LinkedInSearchPage linkedInSearchPage = linkedInHomePage.search(searchTerm);
         Assert.assertTrue(linkedInSearchPage.isPageLoaded(),"SearchPage is not loaded");
 
-        Assert.assertTrue(linkedInSearchPage.isNumberSearchResultTrue(10), "the number of search results is incorrect");
+        Assert.assertEquals(linkedInSearchPage.getSearchResultsNumber(), 10, "Wrong number of searchResults on Search page");
 
-        Assert.assertEquals(linkedInSearchPage.isSearchTermFound(), "1111111111", "Not all results contain the SearchTerm");
-
+        List<String> searchResultsList=linkedInSearchPage.getSearchResultsList();
+        for (String searchResult : searchResultsList) {
+            Assert.assertTrue(searchResult.toLowerCase().contains(searchTerm.toLowerCase()), "SearchTerm "+searchTerm+" not found in:\n"+searchResult);
+        }
     }
 
 
