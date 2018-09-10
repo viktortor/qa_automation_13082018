@@ -1,32 +1,16 @@
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+package test;
+
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import page.*;
 
 import static java.lang.Thread.sleep;
 
-public class LinkedInForgotPasswordTest {
-    WebDriver driver;
-    LinkedInLoginPage linkedInLoginPage;
-
-    @BeforeMethod
-    public void beforeMethod() {
-        driver = new ChromeDriver();
-        driver.get("https://www.linkedin.com/");
-        linkedInLoginPage = new LinkedInLoginPage(driver);
-    }
-
-    @AfterMethod
-    public void afterMethod(){driver.quit();}
-
-
-
+public class LinkedInForgotPasswordTest extends LinkedInBaseTest{
 
     @Test
     public void successfullReNewPasswordTest () {
-        String userEmail = "getjman1@meta.ua";
+        String userEmail = "getjman1@gmail.com";
         String userNewPassword = "Qwertyu-1";
 
         Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");
@@ -39,11 +23,11 @@ public class LinkedInForgotPasswordTest {
             e.printStackTrace();
         }
         Assert.assertTrue(requestPasswordResetSubmitPage.isPageLoaded(),"Request Password Reset Submit page is not loaded");
-        try {
-            sleep(60000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            sleep(60000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         LinkedInEnterNewPasswordPage enterNewPasswordPage = requestPasswordResetSubmitPage.tempMethod();
         Assert.assertTrue(enterNewPasswordPage.isPageLoaded(),"Enter New Password page is not loaded");
         LinkedInPasswordChangedSuccessfullyPage passwordChangedSuccessfullyPage = enterNewPasswordPage.newPassword(userNewPassword);

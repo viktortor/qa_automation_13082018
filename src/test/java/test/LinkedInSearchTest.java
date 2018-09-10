@@ -1,27 +1,13 @@
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+package test;
+
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import page.LinkedInHomePage;
+import page.LinkedInSearchPage;
 
 import java.util.List;
 
-public class LinkedInSearchTest {
-    WebDriver driver;
-    LinkedInLoginPage linkedInLoginPage;
-
-    @BeforeMethod
-    public void beforeMethod() {
-        driver = new ChromeDriver();
-        driver.get("https://www.linkedin.com/");
-        linkedInLoginPage = new LinkedInLoginPage(driver);
-    }
-
-    @AfterMethod
-    public void afterMethod(){
-        driver.quit();
-    }
+public class LinkedInSearchTest extends LinkedInBaseTest{
 
 /*    - Open login page
 - Verify login page is loaded
