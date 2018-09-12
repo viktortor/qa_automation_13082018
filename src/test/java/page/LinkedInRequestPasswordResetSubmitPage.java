@@ -32,7 +32,23 @@ public class LinkedInRequestPasswordResetSubmitPage extends LinkedInBasePage {
     }
 
 
-    public LinkedInEnterNewPasswordPage tempMethod() {
+    public LinkedInEnterNewPasswordPage navigateToLinkFromEmail() {
+
+        int start = message.indexOf("https://www.linkedin.com/e/");
+        int end = message.indexOf("sig=") + 18;
+        char[] preLink = new char[end - start];
+        message.getChars(start, end, preLink, 0);
+        String preLinkString = String.valueOf(preLink);
+        System.out.println("String with !amp!: " + preLinkString);
+
+        String link = preLinkString.replace("amp;","");
+        System.out.println("Our link: " + link);
+
+
+
+        driver.get(link);
+
+
         return new LinkedInEnterNewPasswordPage(driver);
     }
 }
