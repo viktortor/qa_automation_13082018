@@ -7,6 +7,9 @@ import org.openqa.selenium.support.PageFactory;
 
 import static java.lang.Thread.sleep;
 
+/**
+ * LinkedInLogin Page Object class
+ */
 public class LinkedInLoginPage extends LinkedInBasePage {
 
     @FindBy(xpath = "//input[@id='login-email']")
@@ -22,14 +25,24 @@ public class LinkedInLoginPage extends LinkedInBasePage {
     private WebElement forgotPasswordLink;
 
 
-
+    /**
+     * Constructor for LinkedInLoginPage.
+     *
+     * @param driver - driver instance from tests.
+     */
     public LinkedInLoginPage(WebDriver driver){
         this.driver = driver;
         PageFactory.initElements(driver, this);
     }
 
 
-
+    /**
+     * User login by username/password.
+     * @param userEmail - String with userEmail.
+     * @param userPassword - String with userPassword.
+     * @param <T> - generic type to return different PageObjects.
+     * @return one of corresponding PageObjects LinkedInLoginPage/LinkedInHomePage/LinkedInLoginSubmitPage.
+     */
     public <T> T login(String userEmail, String userPassword){
         userEmailField.sendKeys(userEmail);
         userPasswordField.sendKeys(userPassword);

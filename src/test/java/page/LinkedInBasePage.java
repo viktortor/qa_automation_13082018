@@ -14,8 +14,7 @@ public class LinkedInBasePage {
         return driver.getTitle();
     }
 
-    public  static GMailService gMailService = new GMailService();
-    public  static String message;
+    protected   static GMailService gMailService = new GMailService();
 
 
 

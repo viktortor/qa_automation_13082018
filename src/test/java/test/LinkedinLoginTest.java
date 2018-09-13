@@ -53,6 +53,16 @@ public class LinkedinLoginTest extends LinkedInBaseTest{
     }
 
 
+    /**
+     *Verify successful user Login
+     *
+     * Preconditions:
+     * - open new browser
+     * - navigate to ....
+     *Scenario:
+     *
+     *
+     */
     @Test(dataProvider = "validDataProvider")
     public void successfullLoginTest (String userEmail, String userPassword) {
 

@@ -31,14 +31,6 @@ public class LinkedInRequestPasswordResetPage extends LinkedInBasePage {
         gMailService.connect();
         userEmailField.sendKeys(userEmail);
         findAccountButton.click();
-        String messageSubject = "данное сообщение содержит ссылку для изменения пароля";
-        String messageTo = "getjman1@gmail.com";
-        String messageFrom = "security-noreply@linkedin.com";
-
-        message = gMailService.waitMessage(messageSubject, messageTo, messageFrom, 60);
-        System.out.println("Content: " + message);
-
-
         return new LinkedInRequestPasswordResetSubmitPage(driver);
     }
 }

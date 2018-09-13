@@ -1,5 +1,6 @@
 package page;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -34,21 +35,38 @@ public class LinkedInRequestPasswordResetSubmitPage extends LinkedInBasePage {
 
     public LinkedInEnterNewPasswordPage navigateToLinkFromEmail() {
 
-        int start = message.indexOf("https://www.linkedin.com/e/");
-        int end = message.indexOf("sig=") + 18;
-        char[] preLink = new char[end - start];
-        message.getChars(start, end, preLink, 0);
-        String preLinkString = String.valueOf(preLink);
-        System.out.println("String with !amp!: " + preLinkString);
+        String messageSubject = "данное сообщение содержит ссылку для изменения пароля";
+        String messageTo = "getjman1@gmail.com";
+        String messageFrom = "security-noreply@linkedin.com";
 
-        String link = preLinkString.replace("amp;","");
-        System.out.println("Our link: " + link);
+        String message = gMailService.waitMessage(messageSubject, messageTo, messageFrom, 60);
+        System.out.println("Content: " + message);
 
 
+        String resetPasswordLink =
+                StringUtils.substringBetween(message,
+                        "Чтобы изменить пароль в LinkedIn, нажмите <a href=\"",
+                        "\" style").replace("amp;", "");
 
-        driver.get(link);
-
+        driver.get(resetPasswordLink);
 
         return new LinkedInEnterNewPasswordPage(driver);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
