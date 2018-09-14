@@ -5,8 +5,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import static java.lang.Thread.sleep;
-
 /**
  * LinkedInLogin Page Object class
  */
@@ -33,25 +31,24 @@ public class LinkedInLoginPage extends LinkedInBasePage {
     public LinkedInLoginPage(WebDriver driver){
         this.driver = driver;
         PageFactory.initElements(driver, this);
+        waitUntilElementVisible(signInButton, 10);
     }
 
 
     /**
      * User login by username/password.
+     *
      * @param userEmail - String with userEmail.
      * @param userPassword - String with userPassword.
      * @param <T> - generic type to return different PageObjects.
+     *
      * @return one of corresponding PageObjects LinkedInLoginPage/LinkedInHomePage/LinkedInLoginSubmitPage.
      */
     public <T> T login(String userEmail, String userPassword){
         userEmailField.sendKeys(userEmail);
         userPasswordField.sendKeys(userPassword);
         signInButton.click();
-        try {
-            sleep (3000);
-        } catch (InterruptedException e){
-            e.printStackTrace();
-        }
+
         if (getCurrentUrl().contains("/feed")) {
             return (T) new LinkedInHomePage(driver);
         }
@@ -64,16 +61,23 @@ public class LinkedInLoginPage extends LinkedInBasePage {
     }
 
 
+    /**
+     * Verify is expected Page Loaded
+     *
+     * @return true if page loaded and false if page doesn't load
+     */
     public boolean isPageLoaded(){
         return getCurrentUrl().contains("https://www.linkedin.com/")
                 && getCurrentTitle().equals("LinkedIn: Log In or Sign Up")
                 && signInButton.isDisplayed();
     }
 
-//    public boolean isSignInButtonActive(){
-//        return  signInButton.isEnabled();
-//    }
 
+    /**
+     * Click to forgotPassword Link
+     *
+     * @return PageObject LinkedInRequestPasswordResetPage
+     */
     public LinkedInRequestPasswordResetPage forgotPassword() {
         forgotPasswordLink.click();
         return new LinkedInRequestPasswordResetPage(driver);

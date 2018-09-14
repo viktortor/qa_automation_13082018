@@ -6,6 +6,9 @@ import org.testng.annotations.Test;
 import page.LinkedInHomePage;
 import page.LinkedInLoginSubmitPage;
 
+/**
+ * LinkedInLogin Test Object class
+ */
 public class LinkedinLoginTest extends LinkedInBaseTest{
 
 
@@ -54,14 +57,18 @@ public class LinkedinLoginTest extends LinkedInBaseTest{
 
 
     /**
-     *Verify successful user Login
+     * Verify successful user Login.
      *
      * Preconditions:
-     * - open new browser
-     * - navigate to ....
-     *Scenario:
+     * - Open new browser.
+     * - Navigate to linkedin.com
      *
-     *
+     * Scenario:
+     * - Verify that login page is loaded.
+     * - Enter userEmail.
+     * - Enter userPassword.
+     * - Click on 'Sign in' button.
+     * - Verify Home page is loaded.
      */
     @Test(dataProvider = "validDataProvider")
     public void successfullLoginTest (String userEmail, String userPassword) {
@@ -75,6 +82,18 @@ public class LinkedinLoginTest extends LinkedInBaseTest{
     }
 
 
+    /**
+     * checking the inability to login with an empty username and / or password
+     *
+     *  Preconditions:
+     * - Open new browser.
+     * - Navigate to linkedin.com
+     *
+     * Scenario:
+     * - Verify that login page is loaded.
+     * - Enter empty userEmail (empty userPassword)
+     * - Verify that 'Sign in' button is disabled.
+     */
     @Test (dataProvider = "emptyDataProvider")
     public void emptyUserEmailAndUserPasswordTest(String userEmail, String userPassword) {
 
@@ -85,6 +104,24 @@ public class LinkedinLoginTest extends LinkedInBaseTest{
     }
 
 
+    /**
+     * checking negativ login with incorrect username and / or password
+     *
+     * Preconditions
+     * - Open new browser.
+     * - Navigate to linkedin.com
+     *
+     * Scenario:
+     * - Verify that login page is loaded.
+     * - Enter wrong userEmail (wrong userPassword)
+     * - Verify that Login Submit Page is loaded.
+     * - Verify Email Field Alert Message and Password Field Alert Message
+     *
+     * @param userEmail
+     * @param userPassword
+     * @param userEmailFieldError
+     * @param userPasswordFieldError
+     */
     @Test (dataProvider = "invalidDataProvider")
     public void negativLoginTest(String userEmail, String userPassword, String userEmailFieldError, String userPasswordFieldError){
         Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");

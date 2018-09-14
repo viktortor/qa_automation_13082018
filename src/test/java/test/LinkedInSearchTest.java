@@ -7,17 +7,28 @@ import page.LinkedInSearchPage;
 
 import java.util.List;
 
+/**
+ * LinkedInSearchTest Test Object class
+ */
 public class LinkedInSearchTest extends LinkedInBaseTest{
 
-/*    - Open login page
-- Verify login page is loaded
-- Login with valid credentials
-- Verify home page is loaded
-- Search for 'hr' Searchterm
-- Verify Search page is loaded
-- Verify 10 results displayed on search page
-- Verify each result item contains searchterm*/
-
+    /**
+     * Verify successful Search
+     *
+     * Preconditions:
+     * - Open new browser.
+     * - Navigate to linkedin.com
+     *
+     * Scenario:
+     * - Open login page
+     * - Verify login page is loaded
+     * - Login with valid credentials
+     * - Verify home page is loaded
+     * - Search for 'hr' Searchterm
+     * - Verify Search page is loaded
+     * - Verify 10 results displayed on search page
+     * - Verify each result item contains searchterm
+     */
     @Test
     public void successfullSearchTest () {
 

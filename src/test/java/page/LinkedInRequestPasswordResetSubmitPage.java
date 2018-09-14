@@ -6,6 +6,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+/**
+ * LinkedInRequestPasswordResetSubmitPage Page Object class
+ */
 public class LinkedInRequestPasswordResetSubmitPage extends LinkedInBasePage {
 
     @FindBy(xpath = "//*[@class='different__email different__email--desktop']")
@@ -16,14 +19,22 @@ public class LinkedInRequestPasswordResetSubmitPage extends LinkedInBasePage {
     WebElement userEmailField;
 
 
-
-
+    /**
+     * Constructor for LinkedInRequestPasswordResetSubmitPage.
+     *
+     * @param driver - driver instance from tests.
+     */
     public LinkedInRequestPasswordResetSubmitPage(WebDriver driver){
         this.driver = driver;
         PageFactory.initElements(driver, this);
     }
 
 
+    /**
+     * Verify is expected Page Loaded
+     *
+     * @return true if page loaded and false if page doesn't load
+     */
     public boolean isPageLoaded() {
         return
 //                getCurrentUrl().contains("request-password-reset-submit")
@@ -33,6 +44,11 @@ public class LinkedInRequestPasswordResetSubmitPage extends LinkedInBasePage {
     }
 
 
+    /**
+     * get message and go to the resetPasswordLink from email
+     *
+     * @return PageObject LinkedInEnterNewPasswordPage
+     */
     public LinkedInEnterNewPasswordPage navigateToLinkFromEmail() {
 
         String messageSubject = "данное сообщение содержит ссылку для изменения пароля";
