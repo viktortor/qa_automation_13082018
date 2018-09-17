@@ -2,10 +2,13 @@ package test;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import page.LinkedInLoginPage;
+
 
 /**
  * LinkedIn Base Test Object class. Contains common elements of all Tests
@@ -13,6 +16,7 @@ import page.LinkedInLoginPage;
 public class LinkedInBaseTest {
     WebDriver driver;
     LinkedInLoginPage linkedInLoginPage;
+    private String browserName = "Chrome";
 
     /**
      * preconditions for all tests:
@@ -22,8 +26,22 @@ public class LinkedInBaseTest {
      */
     @BeforeMethod
     public void beforeMethod() {
-        WebDriverManager.firefoxdriver().setup();//эти две строки это переключатель - это свич-кейс
-        driver = new FirefoxDriver();//
+
+        switch (browserName) {
+            case "Chrome":
+                WebDriverManager.chromedriver().setup();
+                driver = new ChromeDriver();
+                break;
+            case "FireFox":
+                WebDriverManager.firefoxdriver().setup();
+                driver = new FirefoxDriver();
+                break;
+            case "IE":
+                WebDriverManager.iedriver().setup();
+                driver = new InternetExplorerDriver();
+                break;
+        }
+
         driver.get("https://www.linkedin.com/");
         linkedInLoginPage = new LinkedInLoginPage(driver);
     }
