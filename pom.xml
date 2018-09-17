@@ -15,6 +15,13 @@
             <version>LATEST</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>3.0.0</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.testng/testng -->
         <dependency>
             <groupId>org.testng</groupId>
@@ -35,6 +42,8 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.8</version>
         </dependency>
+
+
 
     </dependencies>
 

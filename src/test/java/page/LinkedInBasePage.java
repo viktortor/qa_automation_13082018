@@ -1,5 +1,6 @@
 package page;
 
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -12,15 +13,23 @@ import util.GMailService;
 public class LinkedInBasePage {
     protected WebDriver driver;
 
+    /**
+     * get current page url
+     * @return current page url
+     */
     protected String getCurrentUrl(){
         return driver.getCurrentUrl();
     }
 
+    /**
+     * get current page Title
+     * @return current page Title
+     */
     protected String getCurrentTitle(){
         return driver.getTitle();
     }
 
-    protected   static GMailService gMailService = new GMailService();
+    protected static GMailService gMailService = new GMailService();
 
     /**
      * It waits until the object becomes visible (page is loaded)
@@ -33,23 +42,29 @@ public class LinkedInBasePage {
     protected WebElement waitUntilElementVisible(WebElement webElement, int timeOutInSec){
         WebDriverWait wait = new WebDriverWait(driver, timeOutInSec);
         return wait.until(ExpectedConditions.visibilityOf(webElement));
-
     }
 
 
-    /**
-     * It waits until the object becomes Clickable (page is loaded)
-     *
-     * @param webElement - Expected object, which must be on the page
-     * @param timeOutInSec - max timeOut In Sec
-     *
-     * @return Expected Clickable webelement
-     */
-    protected WebElement waitUntilElementClickable(WebElement webElement, int timeOutInSec){
+    protected Boolean isUrlContains (String partiaUrl, int timeOutInSec){
         WebDriverWait wait = new WebDriverWait(driver, timeOutInSec);
-        return wait.until(ExpectedConditions.elementToBeClickable(webElement));
+
+        try {
+            return wait.until(ExpectedConditions.urlContains(partiaUrl));
+        } catch (TimeoutException e){
+            return false;
+        }
 
     }
+
+    protected void assertElementIsVisible(WebElement webElement, int timeOutInSec, String message){
+        try {
+            waitUntilElementVisible(webElement, timeOutInSec);
+        } catch (TimeoutException e) {
+            throw new AssertionError(message);
+        }
+
+    }
+
 
 
 

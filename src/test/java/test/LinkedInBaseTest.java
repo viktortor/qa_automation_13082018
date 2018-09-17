@@ -1,7 +1,8 @@
 package test;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import page.LinkedInLoginPage;
@@ -21,7 +22,8 @@ public class LinkedInBaseTest {
      */
     @BeforeMethod
     public void beforeMethod() {
-        driver = new ChromeDriver();
+        WebDriverManager.firefoxdriver().setup();//эти две строки это переключатель - это свич-кейс
+        driver = new FirefoxDriver();//
         driver.get("https://www.linkedin.com/");
         linkedInLoginPage = new LinkedInLoginPage(driver);
     }
@@ -30,9 +32,7 @@ public class LinkedInBaseTest {
      * final conditions:
      * - close browser
      */
-    @AfterMethod
-    public void afterMethod(){
-        driver.quit();
-    }
+    @AfterMethod(alwaysRun = true)
+    public void afterMethod(){driver.quit();}
 
 }

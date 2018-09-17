@@ -32,8 +32,8 @@ public class LinkedInSearchTest extends LinkedInBaseTest{
     @Test
     public void successfullSearchTest () {
 
-        String userEmail = "getjman1@meta.ua";
-        String userPassword = "Qwertyu-1";
+        String userEmail = "getjman1@gmail.com";
+        String userPassword = "Qwertyu-2";
         String searchTerm = "HR";
 
         Assert.assertTrue(linkedInLoginPage.isPageLoaded(),"Login page is not loaded");

@@ -5,6 +5,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+
 /**
  * LinkedInLogin Page Object class
  */
@@ -31,7 +32,9 @@ public class LinkedInLoginPage extends LinkedInBasePage {
     public LinkedInLoginPage(WebDriver driver){
         this.driver = driver;
         PageFactory.initElements(driver, this);
-        waitUntilElementVisible(signInButton, 10);
+        assertElementIsVisible (signInButton,5, "Login page is not loaded");
+
+
     }
 
 
@@ -49,10 +52,10 @@ public class LinkedInLoginPage extends LinkedInBasePage {
         userPasswordField.sendKeys(userPassword);
         signInButton.click();
 
-        if (getCurrentUrl().contains("/feed")) {
+        if (isUrlContains("/feed", 5)) {
             return (T) new LinkedInHomePage(driver);
         }
-        if (getCurrentUrl().contains("/login-submit")) {
+        if (isUrlContains("/login-submit", 5)) {
             return (T) new LinkedInLoginSubmitPage(driver);
         }
         else {
