@@ -7,6 +7,8 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 import page.LinkedInLoginPage;
 
 
@@ -24,22 +26,25 @@ public class LinkedInBaseTest {
      * - Navigate to linkedin.com
      * - initialise LinkedIn Login Page
      */
+    @Parameters("browserName")
     @BeforeMethod
-    public void beforeMethod() {
+    public void beforeMethod(@Optional ("chrome") String browserName) throws Exception {
 
-        switch (browserName) {
-            case "Chrome":
+        switch (browserName.toLowerCase()) {
+            case "chrome":
                 WebDriverManager.chromedriver().setup();
                 driver = new ChromeDriver();
                 break;
-            case "FireFox":
+            case "firefox":
                 WebDriverManager.firefoxdriver().setup();
                 driver = new FirefoxDriver();
                 break;
-            case "IE":
+            case "ie":
                 WebDriverManager.iedriver().setup();
                 driver = new InternetExplorerDriver();
                 break;
+            default:
+                throw new Exception("Browser " + browserName + " is not supported");
         }
 
         driver.get("https://www.linkedin.com/");
@@ -51,6 +56,8 @@ public class LinkedInBaseTest {
      * - close browser
      */
     @AfterMethod(alwaysRun = true)
-    public void afterMethod(){driver.quit();}
+    public void afterMethod() {
+        driver.quit();
+    }
 
 }
