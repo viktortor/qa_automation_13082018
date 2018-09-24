@@ -2,6 +2,7 @@
 
 <suite name="Login Test Suite" verbose="1" >
     <parameter name="browserName" value="Firefox"/>
+    <parameter name="envURL" value="https://www.linkedin.com/"/>
 
     <test name="Positive" >
         <classes>

@@ -26,9 +26,9 @@ public class LinkedInBaseTest {
      * - Navigate to linkedin.com
      * - initialise LinkedIn Login Page
      */
-    @Parameters("browserName")
+    @Parameters({"browserName", "envURL"})
     @BeforeMethod
-    public void beforeMethod(@Optional ("chrome") String browserName) throws Exception {
+    public void beforeMethod(@Optional ("chrome") String browserName, @Optional ("https://www.linkedin.com/") String envURL) throws Exception {
 
         switch (browserName.toLowerCase()) {
             case "chrome":
@@ -47,7 +47,7 @@ public class LinkedInBaseTest {
                 throw new Exception("Browser " + browserName + " is not supported");
         }
 
-        driver.get("https://www.linkedin.com/");
+        driver.get(envURL);
         linkedInLoginPage = new LinkedInLoginPage(driver);
     }
 
